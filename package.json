@@ -1,0 +1,32 @@
+{
+  "name": "fullstack-starter",
+  "private": true,
+  "version": "1.0.0",
+  "engines": {
+    "node": "24.15.0",
+    "pnpm": "10.33.0"
+  },
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo watch dev --filter=@acme/web --filter=@acme/server",
+    "dev:server": "turbo watch dev --filter=@acme/server",
+    "dev:web": "turbo watch dev --filter=@acme/web",
+    "db:generate": "dotenv -e apps/server/.env -- pnpm --filter @acme/db db:generate",
+    "db:migrate": "dotenv -e apps/server/.env -- pnpm --filter @acme/db db:migrate",
+    "db:push": "dotenv -e apps/server/.env -- pnpm --filter @acme/db db:push",
+    "db:studio": "dotenv -e apps/server/.env -- pnpm --filter @acme/db db:studio",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f db",
+    "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
+    "format:fix": "turbo run format --continue -- --write --cache --cache-location .cache/.prettiercache",
+    "lint": "turbo run lint --continue -- --cache --cache-location .cache/.eslintcache",
+    "lint:fix": "turbo run lint --continue -- --fix --cache --cache-location .cache/.eslintcache",
+    "typecheck": "turbo run typecheck"
+  },
+  "devDependencies": {
+    "turbo": "2.9.7",
+    "typescript": "catalog:"
+  }
+}

@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:${DB_PORT}"
+    volumes:
+      - finance_tracker_db:/var/lib/postgresql/data
+volumes:
+  finance_tracker_db:

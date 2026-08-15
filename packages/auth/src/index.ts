@@ -10,8 +10,6 @@ import {
 } from 'better-auth/plugins';
 import { z } from 'zod';
 
-import { usePolarPlugin } from './polar.js';
-
 type AuthDb = Parameters<typeof drizzleAdapter>[0];
 type AuthInstance = Auth<BetterAuthOptions>;
 
@@ -21,15 +19,12 @@ const _authOptionsSchema = z.looseObject({
   googleClientId: z.string().min(1),
   googleClientSecret: z.string().min(1),
   isProd: z.boolean(),
-  polarAccessToken: z.string(),
   secret: z.string(),
 });
 
 type AuthOptions = BetterAuthOptions & z.infer<typeof _authOptionsSchema>;
 
 export function createAuth(db: AuthDb, options: AuthOptions): AuthInstance {
-  const polarPlugin = usePolarPlugin(options.polarAccessToken);
-
   const authOptions: BetterAuthOptions = {
     appName: 'API',
     advanced: { database: { generateId: 'uuid' } },
@@ -72,7 +67,6 @@ export function createAuth(db: AuthDb, options: AuthOptions): AuthInstance {
       organization(),
       openAPI(),
       twoFactor(),
-      polarPlugin,
     ],
     trustedOrigins: [options.appOrigin],
     session: { cookieCache: { enabled: true, maxAge: 60 * 5 } },

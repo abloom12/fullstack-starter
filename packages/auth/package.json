@@ -15,8 +15,6 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@polar-sh/better-auth": "1.8.4",
-    "@polar-sh/sdk": "0.47.1",
     "@better-auth/drizzle-adapter": "1.6.8",
     "better-auth": "catalog:",
     "zod": "catalog:"

@@ -25,7 +25,6 @@ export const app: FastifyPluginAsync = async (server) => {
     googleClientId: config.auth.googleClientId,
     googleClientSecret: config.auth.googleClientSecret,
     isProd: config.isProd,
-    polarAccessToken: '',
   });
   const { appRouter, createContext } = createApi(auth);
 

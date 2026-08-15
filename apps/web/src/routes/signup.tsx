@@ -1,4 +1,9 @@
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useNavigate,
+} from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -14,47 +19,41 @@ import {
 import { Field, FieldGroup } from '@/components/ui/field';
 import { Separator } from '@/components/ui/separator';
 import { authClient } from '@/lib/auth-client';
+import { authSearchSchema, getAuthRedirect } from '@/lib/auth-redirect';
 import { useAppForm } from '@/lib/form';
 
 export const Route = createFileRoute('/signup')({
-  beforeLoad: () => {},
+  beforeLoad: async ({ search }) => {
+    const { data: session } = await authClient.getSession();
+
+    if (session) {
+      throw redirect({ to: getAuthRedirect(search.redirect) });
+    }
+  },
   component: RouteComponent,
-  validateSearch: z.object({ redirect: z.string().optional() }),
+  validateSearch: authSearchSchema,
 });
 
 const signupSchema = z
   .object({
     name: z.string().trim().min(1, 'Name is required'),
-    email: z
+    email: z.email('Invalid email address'),
+    password: z
       .string()
-      .trim()
-      .min(1, 'Email is required')
-      .refine((v) => (v ? z.email().safeParse(v).success : true), {
-        message: 'Invalid email address',
-      }),
-    password: z.string().superRefine((password, ctx) => {
-      if (!password) {
-        ctx.addIssue({ code: 'custom', message: 'Password is required.' });
-        return;
-      }
-    }),
+      .min(12, 'Password must be at least 12 characters')
+      .max(128, 'Password must be at most 128 characters'),
     confirm: z.string(),
-    image: z.string().optional(),
   })
-  .refine(({ password, confirm }) => !password || !!confirm, {
-    message: 'Please confirm your password.',
+  .refine(({ password, confirm }) => password === confirm, {
+    message: 'Passwords do not match',
     path: ['confirm'],
-  })
-  .refine(
-    ({ password, confirm }) => !password || !confirm || password === confirm,
-    { message: 'Passwords do not match', path: ['confirm'] },
-  );
+  });
 
 type SignupSchema = z.infer<typeof signupSchema>;
 
 function RouteComponent() {
-  const navigate = useNavigate({ from: '/' });
-  // const { isPending } = authClient.useSession();
+  const navigate = useNavigate({ from: '/signup' });
+  const { redirect: redirectTo } = Route.useSearch();
 
   const form = useAppForm({
     defaultValues: {
@@ -76,8 +75,8 @@ function RouteComponent() {
         return;
       }
 
-      navigate({ to: '/forecast' });
-      toast.success('Sign in successful');
+      await navigate({ to: getAuthRedirect(redirectTo) });
+      toast.success('Account created successfully');
     },
   });
 
@@ -140,7 +139,12 @@ function RouteComponent() {
           <div className="flex items-center justify-center">
             <p>Already have an account?</p>
             <Button asChild variant="link">
-              <Link to={'/login'}>Login</Link>
+              <Link
+                to="/login"
+                search={redirectTo ? { redirect: redirectTo } : {}}
+              >
+                Login
+              </Link>
             </Button>
           </div>
         </CardContent>

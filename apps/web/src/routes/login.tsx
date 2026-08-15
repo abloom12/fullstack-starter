@@ -1,4 +1,9 @@
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useNavigate,
+} from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -8,25 +13,32 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field, FieldGroup } from '@/components/ui/field';
 import { Separator } from '@/components/ui/separator';
 import { authClient } from '@/lib/auth-client';
+import { authSearchSchema, getAuthRedirect } from '@/lib/auth-redirect';
 import { useAppForm } from '@/lib/form';
 
 export const Route = createFileRoute('/login')({
-  beforeLoad: () => {},
+  beforeLoad: async ({ search }) => {
+    const { data: session } = await authClient.getSession();
+
+    if (session) {
+      throw redirect({ to: getAuthRedirect(search.redirect) });
+    }
+  },
   component: RouteComponent,
+  validateSearch: authSearchSchema,
 });
 
 const loginSchema = z.object({
   email: z.email(),
   password: z.string().min(12).max(128),
-  rememberMe: z.boolean(),
 });
 
 function RouteComponent() {
-  const navigate = useNavigate({ from: '/' });
-  // const { isPending } = authClient.useSession();
+  const navigate = useNavigate({ from: '/login' });
+  const { redirect: redirectTo } = Route.useSearch();
 
   const form = useAppForm({
-    defaultValues: { email: '', password: '', rememberMe: false },
+    defaultValues: { email: '', password: '' },
     onSubmit: async ({ value }) => {
       const { error } = await authClient.signIn.email({
         email: value.email,
@@ -38,7 +50,7 @@ function RouteComponent() {
         return;
       }
 
-      navigate({ to: '/forecast' });
+      await navigate({ to: getAuthRedirect(redirectTo) });
       toast.success('Sign in successful');
     },
     validators: { onChange: loginSchema },
@@ -88,7 +100,12 @@ function RouteComponent() {
           <div className="flex items-center justify-center">
             <p>Don't have an account?</p>
             <Button asChild variant="link">
-              <Link to={'/signup'}>Sign Up</Link>
+              <Link
+                to="/signup"
+                search={redirectTo ? { redirect: redirectTo } : {}}
+              >
+                Sign Up
+              </Link>
             </Button>
           </div>
         </CardContent>

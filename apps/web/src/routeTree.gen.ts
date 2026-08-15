@@ -11,13 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as HomeRouteImport } from './routes/home'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppSettingsRouteImport } from './routes/_app/settings'
-import { Route as AppMyMoneyRouteImport } from './routes/_app/my-money'
-import { Route as AppGoalsRouteImport } from './routes/_app/goals'
-import { Route as AppForecastRouteImport } from './routes/_app/forecast'
-import { Route as AppAccountsRouteImport } from './routes/_app/accounts'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -27,6 +24,11 @@ const SignupRoute = SignupRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRouteRoute = AppRouteRouteImport.update({
@@ -43,96 +45,49 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const AppMyMoneyRoute = AppMyMoneyRouteImport.update({
-  id: '/my-money',
-  path: '/my-money',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-const AppGoalsRoute = AppGoalsRouteImport.update({
-  id: '/goals',
-  path: '/goals',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-const AppForecastRoute = AppForecastRouteImport.update({
-  id: '/forecast',
-  path: '/forecast',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-const AppAccountsRoute = AppAccountsRouteImport.update({
-  id: '/accounts',
-  path: '/accounts',
-  getParentRoute: () => AppRouteRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/accounts': typeof AppAccountsRoute
-  '/forecast': typeof AppForecastRoute
-  '/goals': typeof AppGoalsRoute
-  '/my-money': typeof AppMyMoneyRoute
   '/settings': typeof AppSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/accounts': typeof AppAccountsRoute
-  '/forecast': typeof AppForecastRoute
-  '/goals': typeof AppGoalsRoute
-  '/my-money': typeof AppMyMoneyRoute
   '/settings': typeof AppSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteRouteWithChildren
+  '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/_app/accounts': typeof AppAccountsRoute
-  '/_app/forecast': typeof AppForecastRoute
-  '/_app/goals': typeof AppGoalsRoute
-  '/_app/my-money': typeof AppMyMoneyRoute
   '/_app/settings': typeof AppSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/login'
-    | '/signup'
-    | '/accounts'
-    | '/forecast'
-    | '/goals'
-    | '/my-money'
-    | '/settings'
+  fullPaths: '/' | '/home' | '/login' | '/signup' | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/login'
-    | '/signup'
-    | '/accounts'
-    | '/forecast'
-    | '/goals'
-    | '/my-money'
-    | '/settings'
+  to: '/' | '/home' | '/login' | '/signup' | '/settings'
   id:
     | '__root__'
     | '/'
     | '/_app'
+    | '/home'
     | '/login'
     | '/signup'
-    | '/_app/accounts'
-    | '/_app/forecast'
-    | '/_app/goals'
-    | '/_app/my-money'
     | '/_app/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRouteRoute: typeof AppRouteRouteWithChildren
+  HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
 }
@@ -151,6 +106,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -174,50 +136,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/_app/my-money': {
-      id: '/_app/my-money'
-      path: '/my-money'
-      fullPath: '/my-money'
-      preLoaderRoute: typeof AppMyMoneyRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/_app/goals': {
-      id: '/_app/goals'
-      path: '/goals'
-      fullPath: '/goals'
-      preLoaderRoute: typeof AppGoalsRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/_app/forecast': {
-      id: '/_app/forecast'
-      path: '/forecast'
-      fullPath: '/forecast'
-      preLoaderRoute: typeof AppForecastRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/_app/accounts': {
-      id: '/_app/accounts'
-      path: '/accounts'
-      fullPath: '/accounts'
-      preLoaderRoute: typeof AppAccountsRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
   }
 }
 
 interface AppRouteRouteChildren {
-  AppAccountsRoute: typeof AppAccountsRoute
-  AppForecastRoute: typeof AppForecastRoute
-  AppGoalsRoute: typeof AppGoalsRoute
-  AppMyMoneyRoute: typeof AppMyMoneyRoute
   AppSettingsRoute: typeof AppSettingsRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
-  AppAccountsRoute: AppAccountsRoute,
-  AppForecastRoute: AppForecastRoute,
-  AppGoalsRoute: AppGoalsRoute,
-  AppMyMoneyRoute: AppMyMoneyRoute,
   AppSettingsRoute: AppSettingsRoute,
 }
 
@@ -228,6 +154,7 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRouteRoute: AppRouteRouteWithChildren,
+  HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
 }

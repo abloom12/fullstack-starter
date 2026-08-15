@@ -2,9 +2,8 @@
 
 ## Blocking bugs
 
-- [ ] **Fix signup:** `apps/server/src/app.ts` passes `polarAccessToken: ''`, ignoring `POLAR_ACCESS_TOKEN`. Polar customer creation runs on signup, so it will fail with an empty token. Make Polar optional and pass/validate its real token, or remove it until billing is implemented.
-- [ ] **Protect `/settings`:** the guard in `apps/web/src/routes/_app/route.tsx` is commented out, leaving `/settings` public.
-- [ ] **Fix post-auth redirects:** login and signup redirect to `/forecast`, but that route no longer exists in source. The built route tree contains only `/`, `/login`, `/signup`, and `/settings`.
+- [x] **Protect `/settings`:** route access now requires an active session and redirects unauthenticated visitors to login.
+- [x] **Fix post-auth redirects:** login and signup now use `/home` as their default destination and preserve `/settings` redirects.
 - [ ] **Wire Google login:** both social-auth button callbacks are no-ops despite server-side Google configuration.
 - [ ] **Commit initial Drizzle migrations:** `packages/db/src/migrations` does not exist. A fresh database has no auth tables, so signup requires a manual `db:push`.
 - [ ] **Fix environment examples:** `apps/server/.env.example` omits required `HOST`, and its example auth secret is shorter than the enforced 32-character minimum.
@@ -14,18 +13,19 @@
 
 ### 1. Complete the minimal auth flow
 
-- [ ] Implement email signup, login, logout, authenticated redirect, and redirect-back to the requested page.
-- [ ] Render/use or remove the unused `rememberMe` field.
-- [ ] Match signup client validation to the server's 12–128-character password policy.
-- [ ] Redirect signed-in users away from `/login` and `/signup`.
+- [x] Implemented email signup, login, logout, authenticated redirects, and settings redirect-back.
+- [x] Removed the unused `rememberMe` field.
+- [x] Matched signup client validation to the server's 12–128-character password policy.
+- [x] Redirect signed-in users away from `/login` and `/signup`.
 
 ### 2. Build the authenticated Settings page
 
-- [ ] Show the current user and session.
-- [ ] Support updating name and profile image.
-- [ ] Support password changes, sign-out, and revoking other sessions.
+- [x] Show the current user and session.
+- [x] Support updating name and profile image.
+- [x] Support password changes and sign-out without revoking other sessions.
+- [ ] Add controls to view or revoke other sessions when needed.
 - [ ] Add email verification and password-reset delivery before production use.
-- [ ] Either implement 2FA, organization, admin, and Polar UI/tests, or remove those enabled plugins until needed.
+- [ ] Either implement 2FA, organization, and admin UI/tests, or remove those enabled plugins until needed.
 
 ### 3. Demonstrate the stack end-to-end
 
@@ -42,7 +42,7 @@
 
 ### 5. Make setup and deployment reproducible
 
-- [ ] Document environment setup, Docker DB, migrations, development commands, and production migration policy in the root README.
+- [x] Documented environment setup, Docker DB, local database bootstrap, development commands, quality checks, and production migration policy in the root README.
 - [ ] Change the Compose port mapping to `${DB_PORT}:5432`; the current `5432:${DB_PORT}` breaks when the host port changes.
 - [ ] Add deployment/runtime configuration or Dockerfiles; Compose currently runs only Postgres.
 

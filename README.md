@@ -1,3 +1,83 @@
+# Fullstack Starter
+
+## Run locally
+
+### Prerequisites
+
+- Node.js `24.15.0` (see `.nvmrc`)
+- pnpm `10.33.0`
+- Docker Desktop or another Docker-compatible runtime for PostgreSQL
+
+### 1. Install dependencies
+
+```bash
+pnpm install
+```
+
+### 2. Configure environment files
+
+```bash
+cp .env.example .env
+cp apps/server/.env.example apps/server/.env
+cp apps/web/.env.example apps/web/.env
+```
+
+Set `HOST=127.0.0.1` in `apps/server/.env`, then replace
+`BETTER_AUTH_SECRET` with a secure value of at least 32 characters:
+
+```bash
+openssl rand -base64 32
+```
+
+Keep the database name, credentials, and port in `.env` and
+`apps/server/.env` aligned. The current server configuration also requires
+non-empty Google client variables; local placeholder values are acceptable for
+email/password development, but use real OAuth credentials before enabling
+Google sign-in.
+
+### 3. Start and initialize PostgreSQL
+
+```bash
+pnpm db:up
+pnpm db:push
+```
+
+`db:push` is currently required for a first local database because the initial
+Drizzle migration has not been committed yet. Use it only for local development.
+Once migrations exist, use `pnpm db:migrate` instead.
+
+### 4. Start the app
+
+```bash
+pnpm dev
+```
+
+- Web app: <http://localhost:5173>
+- API/auth server: <http://localhost:3000>
+
+Useful database commands:
+
+```bash
+pnpm db:logs
+pnpm db:studio
+pnpm db:down
+```
+
+### Quality checks
+
+```bash
+pnpm typecheck
+pnpm lint
+pnpm build
+```
+
+### Production migration policy
+
+Commit reviewed Drizzle migrations and run `pnpm db:migrate` during deployment
+before starting the API. Do not use `pnpm db:push` against a production database.
+Build with `pnpm build`, serve `apps/web/dist` as static files, and start the API
+with `pnpm --filter @acme/server start`.
+
 ## Monorepo Structure
 
 ```

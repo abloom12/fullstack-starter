@@ -16,8 +16,8 @@ type AuthInstance = Auth<BetterAuthOptions>;
 const _authOptionsSchema = z.looseObject({
   appOrigin: z.url(),
   baseURL: z.url().optional(),
-  googleClientId: z.string().min(1),
-  googleClientSecret: z.string().min(1),
+  googleClientId: z.string().min(1).optional(),
+  googleClientSecret: z.string().min(1).optional(),
   isProd: z.boolean(),
   secret: z.string(),
 });
@@ -54,13 +54,17 @@ export function createAuth(db: AuthDb, options: AuthOptions): AuthInstance {
       // onPasswordReset: async (_data, _request) => {}, // turn on with requireEmailVerification
     },
     // emailVerification: { sendVerificationEmail: async () => {} }, // turn on with requireEmailVerification
-    socialProviders: {
-      google: {
-        prompt: 'select_account',
-        clientId: options.googleClientId,
-        clientSecret: options.googleClientSecret,
-      },
-    },
+    ...(options.googleClientId && options.googleClientSecret ?
+      {
+        socialProviders: {
+          google: {
+            prompt: 'select_account',
+            clientId: options.googleClientId,
+            clientSecret: options.googleClientSecret,
+          },
+        },
+      }
+    : {}),
     plugins: [
       admin({ defaultRole: 'user' }),
       haveIBeenPwned({ enabled: options.isProd }),

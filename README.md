@@ -27,10 +27,8 @@ Set `HOST=127.0.0.1` in `apps/server/.env`, then use the
 to create a secure `BETTER_AUTH_SECRET` of at least 32 characters.
 
 Keep the database name, credentials, and port in `.env` and
-`apps/server/.env` aligned. The current server configuration also requires
-non-empty Google client variables; local placeholder values are acceptable for
-email/password development, but use real OAuth credentials before enabling
-Google sign-in.
+`apps/server/.env` aligned. Google client variables are optional; add real OAuth
+credentials before enabling Google sign-in.
 
 ### 3. Start and initialize PostgreSQL
 

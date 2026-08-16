@@ -22,12 +22,9 @@ cp apps/server/.env.example apps/server/.env
 cp apps/web/.env.example apps/web/.env
 ```
 
-Set `HOST=127.0.0.1` in `apps/server/.env`, then replace
-`BETTER_AUTH_SECRET` with a secure value of at least 32 characters:
-
-```bash
-openssl rand -base64 32
-```
+Set `HOST=127.0.0.1` in `apps/server/.env`, then use the
+[Better Auth secret generator](https://www.better-auth.com/docs/installation#secret-key)
+to create a secure `BETTER_AUTH_SECRET` of at least 32 characters.
 
 Keep the database name, credentials, and port in `.env` and
 `apps/server/.env` aligned. The current server configuration also requires
@@ -39,12 +36,12 @@ Google sign-in.
 
 ```bash
 pnpm db:up
-pnpm db:push
+pnpm db:migrate
 ```
 
-`db:push` is currently required for a first local database because the initial
-Drizzle migration has not been committed yet. Use it only for local development.
-Once migrations exist, use `pnpm db:migrate` instead.
+Apply committed Drizzle migrations whenever you create or update a local
+database. When the schema changes, generate a migration with `pnpm db:generate`,
+review and commit it, then apply it with `pnpm db:migrate`.
 
 ### 4. Start the app
 

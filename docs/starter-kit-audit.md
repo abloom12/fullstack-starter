@@ -3,7 +3,7 @@
 ## Blocking bugs
 
 - [x] **Protect `/settings`:** route access now requires an active session and redirects unauthenticated visitors to login.
-- [x] **Fix post-auth redirects:** login and signup now use `/home` as their default destination and preserve `/settings` redirects.
+- [x] **Fix post-auth redirects:** login and signup now use `/` as their default destination and preserve `/settings` redirects.
 - [ ] **Wire Google login:** both social-auth button callbacks are no-ops despite server-side Google configuration.
 - [ ] **Commit initial Drizzle migrations:** `packages/db/src/migrations` does not exist. A fresh database has no auth tables, so signup requires a manual `db:push`.
 - [ ] **Fix environment examples:** `apps/server/.env.example` omits required `HOST`, and its example auth secret is shorter than the enforced 32-character minimum.
@@ -29,9 +29,10 @@
 
 ### 3. Demonstrate the stack end-to-end
 
-- [ ] Use `health.ping` and protected `health.me` from a small authenticated UI/example.
-- [ ] Replace the placeholder `/` and `/settings` pages with a minimal landing page and app shell.
-- [ ] Regenerate and commit `apps/web/src/routeTree.gen.ts`; it references deleted finance routes and is rewritten by Vite.
+- [x] Use `health.ping` from the public home page to verify frontend, tRPC, and Fastify wiring.
+- [x] Replaced the placeholder `/` route with a public, session-aware home page.
+- [ ] Add shared app-shell navigation when more authenticated routes exist.
+- [x] Regenerated `apps/web/src/routeTree.gen.ts` so it matches the current source routes.
 
 ### 4. Add tests and CI
 

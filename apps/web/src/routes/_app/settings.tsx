@@ -111,7 +111,7 @@ function SettingsContent({ session }: { session: AuthSession }) {
       return;
     }
 
-    await navigate({ to: '/home' });
+    await navigate({ to: '/' });
     toast.success('Signed out successfully');
   };
 
@@ -123,7 +123,7 @@ function SettingsContent({ session }: { session: AuthSession }) {
           <p className="text-muted-foreground">Manage your account.</p>
         </div>
         <Button asChild variant="outline">
-          <Link to="/home">Back to Home</Link>
+          <Link to="/">Back to Home</Link>
         </Button>
       </div>
 

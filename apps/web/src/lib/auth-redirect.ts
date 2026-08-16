@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const defaultAuthRedirect = '/home' as const;
+export const defaultAuthRedirect = '/' as const;
 
 const authRedirects = [defaultAuthRedirect, '/settings'] as const;
 

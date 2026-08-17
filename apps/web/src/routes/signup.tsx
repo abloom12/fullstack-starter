@@ -7,7 +7,6 @@ import {
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { SocialAuthButton } from '@/components/social-auth-button';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -17,7 +16,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Field, FieldGroup } from '@/components/ui/field';
-import { Separator } from '@/components/ui/separator';
 import { authClient } from '@/lib/auth-client';
 import { authSearchSchema, getAuthRedirect } from '@/lib/auth-redirect';
 import { useAppForm } from '@/lib/form';
@@ -127,14 +125,6 @@ function RouteComponent() {
               </form.AppForm>
             </FieldGroup>
           </form>
-
-          <Separator className="mb-4" />
-
-          <SocialAuthButton
-            provider="google"
-            onClick={() => {}}
-            className="mb-4"
-          />
 
           <div className="flex items-center justify-center">
             <p>Already have an account?</p>

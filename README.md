@@ -22,9 +22,9 @@ cp apps/server/.env.example apps/server/.env
 cp apps/web/.env.example apps/web/.env
 ```
 
-Set `HOST=127.0.0.1` in `apps/server/.env`, then use the
-[Better Auth secret generator](https://www.better-auth.com/docs/installation#secret-key)
-to create a secure `BETTER_AUTH_SECRET` of at least 32 characters.
+Use the [Better Auth secret generator](https://www.better-auth.com/docs/installation#secret-key)
+to replace the example `BETTER_AUTH_SECRET` with a secure value of at least 32
+characters before deployment.
 
 Keep the database name, credentials, and port in `.env` and
 `apps/server/.env` aligned. Google client variables are optional; add real OAuth

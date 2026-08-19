@@ -15,20 +15,21 @@ This audit reflects the current source tree and the quality checks run locally.
 - [x] `/settings` is protected by a route-level session check.
 - [x] Client password validation matches the configured 12–128-character server policy.
 - [x] The auth server validates its environment, uses explicit CORS origins with credentials, rate limiting, Helmet, and Better Auth trusted origins.
-- [ ] Add account/session management if needed: list and revoke other sessions, account deletion, and a defined policy for account linking once social login is introduced.
+- [ ] Evolve Settings into the self-service account area: profile, password, email verification, linked accounts, active-session list/revocation, 2FA, and account deletion. Split it into routes such as `/settings/profile`, `/settings/security`, and `/settings/danger` as it grows.
 
 ## Better Auth feature roadmap
 
 - [ ] **Add transactional email first.** Configure verification and password-reset delivery, add the associated screens and resend/retry states, then require verified email where appropriate.
-- [ ] **Finish two-factor authentication.** Add TOTP enrollment/verification, backup-code display and regeneration, disable/recovery flows, and E2E coverage for sign-in with 2FA.
-- [ ] **Finish organizations.** Add an organization switcher; creation, member, invitation, role, and team management screens; and server/E2E authorization coverage for every membership boundary.
-- [ ] **Finish administration.** Add a deliberately restricted admin area for user listing, role changes, bans, and session/account actions, with authorization tests that prove ordinary users cannot reach any admin endpoint.
+- [ ] **Finish two-factor authentication in Settings/Security.** Add TOTP enrollment/verification, backup-code display and regeneration, disable/recovery flows, and E2E coverage for sign-in with 2FA.
+- [ ] **Finish organizations in a separate route area.** Add `/organizations`, `/organizations/:slug`, and member, invitation, role, team, and organization-settings screens. Include an organization switcher and server/E2E authorization coverage for every membership boundary.
+- [ ] **Finish administration in a separate restricted route area.** Add `/admin`, `/admin/users`, and other global-management screens for user listing, role changes, bans, and session/account actions. Do not combine this with organization management.
+- [ ] **Enforce authorization on the server.** UI visibility is not access control: every organization procedure must check membership/organization role, and every admin procedure must check the global admin role. Add denial tests for ordinary users and members of other organizations.
 - [ ] **Document the feature contracts.** State the account-linking, email-verification, invitation, recovery, retention, and support policies before exposing these workflows to users.
 
 ## Starter-template reference experience
 
 - [ ] **Add one complete protected CRUD feature.** Use a small, user-owned resource such as notes, projects, or tasks to demonstrate the intended vertical slice: Drizzle schema and migration, Zod validation, protected tRPC query/mutation, React Query invalidation, form handling, and empty/loading/error states. The current API demonstrates health and auth but not a feature pattern consumers can copy.
-- [ ] **Build a shared application shell.** Add authenticated navigation, a user menu, settings/sign-out access, and consistent not-found, route-error, and loading states. This should wrap the reference feature rather than remain an isolated auth demo.
+- [ ] **Build a shared application shell.** Add authenticated navigation, a user menu, settings/sign-out access, and consistent not-found, route-error, and loading states. Link Settings for all signed-in users, Organizations when available, and Admin only for admins; this should wrap the reference feature rather than remain an isolated auth demo.
 - [ ] **Keep the template intentionally scoped.** Prefer a polished email/password baseline and the reference feature over enabled-but-unimplemented integrations. Keep Google optional, and only retain admin, organization, and 2FA when the template includes their supported workflows.
 - [ ] **Add useful local seed data once the reference feature exists.** Replace the empty seed module with an idempotent development seed and document how to run it; never use it for production data.
 

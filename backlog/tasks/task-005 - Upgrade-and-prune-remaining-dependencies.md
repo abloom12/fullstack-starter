@@ -1,9 +1,10 @@
 ---
 id: TASK-005
-title: Upgrade and prune remaining dependencies
+title: Upgrade dependencies and remove unused packages
 status: To Do
 assignee: []
 created_date: '2026-09-15 02:32'
+updated_date: '2026-09-15 13:04'
 labels: []
 dependencies:
   - TASK-004
@@ -26,22 +27,21 @@ ordinal: 5000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-The production dependency graph contains critical and high advisories, duplicate adapter declarations, packages retained only by deleted source, and inconsistent internal package metadata. Upgrade the remaining dependency families against the repaired quality gates, remove packages that no longer have a justified use, and establish a reproducible security baseline without broad overrides.
+Update the remaining vulnerable packages and remove dependencies left behind by the auth and frontend cleanup. This includes Fastify and its plugins, Vite, Turbo, duplicate Better Auth adapters, unused UI packages, and unused devtools.
+
+Keep the changes in the normal dependency graph. Do not use forced audit fixes or broad overrides to hide advisories.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Fastify and its plugins are upgraded to mutually compatible releases that include available security fixes.
-- [ ] #2 Vite, Turbo, and other direct build dependencies with known fixes are upgraded compatibly.
-- [ ] #3 Unused separate Better Auth adapter declarations are removed.
-- [ ] #4 Dependencies made unused by authentication and frontend cleanup are removed.
-- [ ] #5 Development-only tooling is not classified as a production runtime dependency.
-- [ ] #6 Every internal workspace package is marked private unless deliberate publishing configuration exists.
-- [ ] #7 The lockfile is refreshed without audit --fix --force or permanent broad security overrides.
-- [ ] #8 pnpm install --frozen-lockfile succeeds after the refreshed lockfile is committed.
-- [ ] #9 pnpm audit --prod --audit-level high reports no critical or high production advisories.
-- [ ] #10 Any remaining lower-severity finding has a concise applicability and follow-up record.
-- [ ] #11 Format, lint, typecheck, and build gates remain green.
+- [ ] #1 Fastify, its plugins, Vite, Turbo, and other direct dependencies with available security fixes are upgraded to compatible versions.
+- [ ] #2 Duplicate Better Auth adapter packages and packages no longer imported by the app are removed.
+- [ ] #3 Development-only build and test tools are not listed as production dependencies.
+- [ ] #4 Every internal workspace package has private: true.
+- [ ] #5 The lockfile is updated without audit --fix --force or broad dependency overrides.
+- [ ] #6 pnpm install --frozen-lockfile succeeds.
+- [ ] #7 pnpm audit --prod --audit-level high reports no high or critical vulnerabilities.
+- [ ] #8 pnpm format, pnpm lint, pnpm typecheck, and pnpm build pass.
 <!-- AC:END -->
 
 ## Definition of Done

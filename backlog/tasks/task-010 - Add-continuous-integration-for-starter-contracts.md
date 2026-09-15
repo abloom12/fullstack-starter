@@ -1,9 +1,10 @@
 ---
 id: TASK-010
-title: Add continuous integration for starter contracts
+title: Add GitHub Actions CI
 status: To Do
 assignee: []
 created_date: '2026-09-15 02:33'
+updated_date: '2026-09-15 13:04'
 labels: []
 dependencies:
   - TASK-008
@@ -22,22 +23,18 @@ ordinal: 10000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-The repository has no automated gate proving that a clean checkout installs, passes quality checks, initializes PostgreSQL, exercises core auth, or starts in production mode. Add one compact CI workflow using the commands established by earlier tasks so regressions in the scaffold contract block changes.
+Add one GitHub Actions workflow that runs the checks and tests created by the earlier tasks. It should prove the starter works from a clean checkout with a fresh PostgreSQL database.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 CI runs for pull requests and pushes to the main branch.
-- [ ] #2 CI uses the Node and pnpm versions pinned by the repository.
-- [ ] #3 CI starts a healthy isolated PostgreSQL 17 service with explicit test-only credentials.
-- [ ] #4 CI performs pnpm install --frozen-lockfile before verification.
-- [ ] #5 CI requires format, lint, real typecheck, and build commands to pass.
-- [ ] #6 CI blocks critical and high production dependency advisories.
-- [ ] #7 CI applies the committed migration to the isolated database and runs the migration verification.
-- [ ] #8 CI runs server integration tests and the production startup smoke test.
-- [ ] #9 CI installs Chromium and runs the single browser authentication journey.
-- [ ] #10 All environment variables are explicit and CI does not depend on ignored developer env files.
-- [ ] #11 The workflow contains no placeholder commands and passes from a clean checkout without relying on pre-existing Turbo caches.
+- [ ] #1 CI runs on pull requests and pushes to main using the Node and pnpm versions pinned in the repo.
+- [ ] #2 CI starts a healthy PostgreSQL 17 service with test-only credentials.
+- [ ] #3 CI runs pnpm install --frozen-lockfile, format, lint, typecheck, and build.
+- [ ] #4 CI fails on high or critical production dependency advisories.
+- [ ] #5 CI runs the migration check, API tests, production startup smoke, and Playwright auth test.
+- [ ] #6 All test environment variables are set in the workflow; ignored local env files are not required.
+- [ ] #7 The workflow contains no placeholder commands and passes without relying on an existing Turbo cache.
 <!-- AC:END -->
 
 ## Definition of Done

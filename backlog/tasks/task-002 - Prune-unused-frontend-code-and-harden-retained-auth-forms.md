@@ -1,9 +1,10 @@
 ---
 id: TASK-002
-title: Prune unused frontend code and harden retained auth forms
+title: Delete unused UI and fix auth form fields
 status: To Do
 assignee: []
 created_date: '2026-09-15 02:07'
+updated_date: '2026-09-15 13:04'
 labels: []
 dependencies: []
 references:
@@ -25,26 +26,21 @@ ordinal: 2000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-The frontend retains unreachable UI primitives, speculative form controls, and development overlays. This increases bundle size and maintenance while obscuring issues in the small set of forms the scaffold supports.
+Delete the frontend components that are not used by the current routes. Trim the form setup to the three fields we actually use and remove the development overlays from App.
 
-Delete the known unreachable social-auth, dialog/menu/overlay/sidebar/tab/toggle components and use-mobile hook. Remove unused checkbox, currency, native-select, select, and textarea form controls, followed by any UI primitives that become unreachable. Harden only the retained signup, login, profile, and password controls. Package-manifest and lockfile pruning, Playwright coverage, browser environment validation, and global quality-tool configuration are handled by later tasks.
+While touching the retained auth fields, add the browser attributes they are missing and fix the password visibility button. Do not remove packages or update the lockfile here; that happens in TASK-005.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 The form hook registers only InputField, PasswordField, and SubmitButton.
-- [ ] #2 Every retained non-generated frontend component is reachable from the application entry point or route tree.
-- [ ] #3 The application renders no TanStack or React Query development overlays.
-- [ ] #4 Text and password controls expose id and name using the field name.
-- [ ] #5 Retained controls accept a type-safe autoComplete value.
-- [ ] #6 Login uses email and current-password autocomplete values.
-- [ ] #7 Signup uses name, email, and new-password autocomplete values.
-- [ ] #8 Password update uses current-password for the current password and new-password for both new-password fields.
-- [ ] #9 A hidden password announces Show password and a visible password announces Hide password.
-- [ ] #10 Password visibility controls use type="button" and remain keyboard-operable.
-- [ ] #11 Labels, descriptions, and errors reference the correct control IDs.
-- [ ] #12 The web production build succeeds.
-- [ ] #13 A fresh source import-graph check finds no remaining unreachable UI or form modules.
+- [ ] #1 All TS/TSX files that are unreachable from main.tsx and the route tree are deleted, including the social-auth button and unused dialog, menu, sidebar, tab, and toggle components.
+- [ ] #2 Checkbox, currency, native-select, select, and textarea form fields are deleted along with any UI files used only by them.
+- [ ] #3 apps/web/src/lib/form.ts registers only InputField, PasswordField, and SubmitButton.
+- [ ] #4 apps/web/src/App.tsx no longer imports or renders TanStack or React Query development overlays.
+- [ ] #5 InputField and PasswordField set both id and name from the field name and accept a typed autoComplete prop.
+- [ ] #6 Login, signup, and password-change fields use the correct email, name, current-password, and new-password autocomplete values.
+- [ ] #7 The password button uses type="button" and announces Show password when hidden and Hide password when visible.
+- [ ] #8 pnpm --filter @acme/web build passes and a fresh import-graph scan finds no unreachable UI or form files.
 <!-- AC:END -->
 
 ## Definition of Done

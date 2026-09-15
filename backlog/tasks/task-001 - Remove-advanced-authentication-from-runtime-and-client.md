@@ -1,9 +1,10 @@
 ---
 id: TASK-001
-title: Remove advanced authentication from runtime and client
+title: Strip auth down to email and password
 status: To Do
 assignee: []
 created_date: '2026-09-15 02:07'
+updated_date: '2026-09-15 12:54'
 labels: []
 dependencies: []
 references:
@@ -23,23 +24,21 @@ ordinal: 1000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-The starter currently exposes unfinished Better Auth capabilities without supported UI or authorization coverage, increasing endpoint, configuration, client-type, and security surface beyond the agreed email/password scaffold.
+We only want basic email/password auth in this starter. Right now Better Auth also enables admin tools, organizations, two-factor auth, OpenAPI, the Have I Been Pwned password check, and optional Google login. None of those features has a complete workflow, so remove them from the server and browser setup.
 
-Reduce active authentication to the supported core flow. Database schema regeneration and migration creation are deliberately deferred until Better Auth and the remaining dependencies have been upgraded. Package-manifest and lockfile pruning are also handled by the later dependency task.
+Keep signup, login, sessions, logout, profile updates, and password changes. Do not regenerate the auth schema or create migrations in this task; that will happen after the Better Auth upgrade in TASK-004 and during the database work in TASK-007.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Server authentication supports email/password signup and login, sessions, logout, profile updates, and password changes.
-- [ ] #2 Admin, organization, two-factor, OpenAPI, HIBP, and social-provider plugins are absent from runtime configuration.
-- [ ] #3 The createAuth contract no longer accepts plugin-specific or Google-specific options.
-- [ ] #4 Server environment parsing and configuration no longer accept or expose Google credentials.
-- [ ] #5 The server environment example no longer contains Google variables.
-- [ ] #6 The browser auth client has no advanced client plugins.
-- [ ] #7 Unused auth error mapping and autocomplete-dump scaffolding are removed.
-- [ ] #8 Session and User client types remain available to routes.
-- [ ] #9 Active setup documentation no longer claims Google or advanced auth support.
-- [ ] #10 Auth, API, server, and web packages build successfully.
+- [ ] #1 packages/auth/src/index.ts contains no advanced plugins, Google provider, or plugin-specific synthetic user fields.
+- [ ] #2 createAuth only requires the database, app origin, auth URL, and secret.
+- [ ] #3 Google credentials and wiring are removed from server configuration and apps/server/.env.example.
+- [ ] #4 apps/web/src/lib/auth-client.ts contains only the core auth client and its Session and User types; plugin clients and unused error-code scaffolding are gone.
+- [ ] #5 The README no longer tells users how to configure Google or claims advanced auth support.
+- [ ] #6 Existing signup, login, logout, profile-update, and password-change route code still compiles.
+- [ ] #7 pnpm build passes.
+- [ ] #8 The database schema and migrations are unchanged by this task.
 <!-- AC:END -->
 
 ## Definition of Done

@@ -1,9 +1,10 @@
 ---
 id: TASK-004
-title: Upgrade Better Auth and pin schema tooling
+title: Upgrade Better Auth and pin its schema generator
 status: To Do
 assignee: []
 created_date: '2026-09-15 02:32'
+updated_date: '2026-09-15 13:04'
 labels: []
 dependencies:
   - TASK-003
@@ -25,20 +26,21 @@ ordinal: 4000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-Better Auth is pinned to a vulnerable runtime release while schema generation invokes an arbitrary latest CLI without a loadable explicit configuration. Upgrade the runtime and schema tooling together so the final core schema can later be regenerated reproducibly. The committed database schema and migration remain deferred to the database-baseline task.
+Upgrade Better Auth to a patched version and stop generating schemas with auth@latest. The runtime and generator should use the same pinned version.
+
+Add the CLI config needed to generate our email/password schema, but generate only a temporary file for verification. TASK-007 will replace the real schema and create the migration.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Better Auth runtime packages use one reviewed compatible version across the workspace.
-- [ ] #2 The Better Auth schema CLI is a lockfile-pinned development dependency compatible with the runtime version.
-- [ ] #3 No schema-generation command uses pnpm dlx, latest, or another unpinned executable.
-- [ ] #4 Schema generation uses an explicit CLI-only auth configuration containing only the accepted core auth options.
-- [ ] #5 The CLI-only configuration requires no live PostgreSQL connection or production secret.
-- [ ] #6 The CLI-only configuration is typechecked but excluded from the runtime library build.
-- [ ] #7 The pinned CLI successfully generates a non-empty core PostgreSQL schema to a disposable output location.
-- [ ] #8 No final auth schema or Drizzle migration is committed by this task.
-- [ ] #9 Frozen installation and all existing quality gates pass after the upgrade.
+- [ ] #1 better-auth and the auth CLI use the same reviewed, lockfile-pinned version.
+- [ ] #2 No auth command uses pnpm dlx or an @latest version.
+- [ ] #3 The generator uses an explicit CLI config containing only the email/password auth options.
+- [ ] #4 The CLI config does not need a database connection or production environment values.
+- [ ] #5 The CLI config is included in typechecking and excluded from the auth package build.
+- [ ] #6 The pinned command generates a non-empty PostgreSQL schema to a temporary location.
+- [ ] #7 packages/db/src/schemas/auth-schema.ts and the migrations directory are unchanged by this task.
+- [ ] #8 pnpm install --frozen-lockfile, pnpm typecheck, and pnpm build pass.
 <!-- AC:END -->
 
 ## Definition of Done

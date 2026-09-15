@@ -1,9 +1,10 @@
 ---
 id: TASK-011
-title: Finish documentation and repository cleanup
+title: Clean up the README and old docs
 status: To Do
 assignee: []
 created_date: '2026-09-15 02:33'
+updated_date: '2026-09-15 13:04'
 labels: []
 dependencies:
   - TASK-010
@@ -23,21 +24,18 @@ ordinal: 11000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-The repository documentation and metadata still describe stale product features, nonexistent directories, and unverified setup behavior. Once CI proves the final scaffold contract, reduce documentation to accurate project-specific guidance, remove superseded review material, and verify the same workflow from a clean checkout.
+Update the repository documentation after the code and CI are finished. The README should explain the starter as it actually works, and old finance, template, audit, and remediation notes should be removed instead of maintained.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 The root README identifies the repository as a private reusable scaffold consistent with its license.
-- [ ] #2 The README documents the verified prerequisites, environment setup, PostgreSQL bootstrap, development commands, quality checks, tests, and production-mode boundary.
-- [ ] #3 The README describes only implemented features and contains no Google, advanced-auth, finance-product, TanStack Table, nonexistent .vscode, or nonexistent packages/ui claims.
-- [ ] #4 The documented repository structure matches tracked source.
-- [ ] #5 The web application has a meaningful starter title instead of web.
-- [ ] #6 The stale finance-specific web README and incorrect Docker ignore references are removed or corrected.
-- [ ] #7 Copied vendor notes without a clear project-specific maintenance purpose are removed.
-- [ ] #8 Superseded audit, completed-task, and review-remediation documents are removed after useful requirements are represented by Backlog tasks or current docs.
-- [ ] #9 No tracked source, documentation, package, or dependency exists solely for a deferred feature.
-- [ ] #10 A clean-checkout run passes frozen install, format, lint, typecheck, build, production audit, migrations, server tests, browser tests, and production smoke.
+- [ ] #1 The root README calls this a private reusable scaffold and matches the existing license.
+- [ ] #2 The README documents the tested install, env setup, database setup, dev, quality-check, test, and production-mode commands.
+- [ ] #3 The README lists only features and directories that exist; Google, advanced auth, finance, TanStack Table, .vscode, and packages/ui references are gone.
+- [ ] #4 apps/web has a meaningful page title, the finance-specific web README is removed, and .dockerignore refers to apps/server rather than apps/api.
+- [ ] #5 Copied vendor notes and superseded audit, completed-task, and review-remediation docs are removed.
+- [ ] #6 No tracked source, docs, package, or dependency remains only for a feature we deferred.
+- [ ] #7 From a clean checkout, frozen install, format, lint, typecheck, build, production audit, migrations, API tests, Playwright, and the production smoke all pass.
 <!-- AC:END -->
 
 ## Definition of Done

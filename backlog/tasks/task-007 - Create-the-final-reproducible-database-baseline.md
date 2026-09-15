@@ -1,9 +1,10 @@
 ---
 id: TASK-007
-title: Create the final reproducible database baseline
+title: Fix database setup and commit the initial migration
 status: To Do
 assignee: []
 created_date: '2026-09-15 02:32'
+updated_date: '2026-09-15 13:04'
 labels: []
 dependencies:
   - TASK-006
@@ -30,24 +31,22 @@ ordinal: 7000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-A fresh clone cannot currently initialize PostgreSQL because no migration is committed, root database commands invoke a missing dotenv executable, and local Compose configuration has incorrect port and stale naming behavior. With auth scope and dependency versions finalized, regenerate the core Better Auth schema and commit one reviewed initial migration that makes database setup deterministic.
+Make database setup work from a fresh clone. Fix the root database commands and Docker Compose setup, then regenerate the final auth schema with the pinned Better Auth CLI and commit one initial Drizzle migration.
+
+This is the database pass we intentionally saved until auth and dependency work were finished.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Root database commands work without requiring a standalone dotenv executable.
-- [ ] #2 An injected DATABASE_URL takes precedence and loading apps/server/.env remains optional for local commands.
-- [ ] #3 Docker Compose maps the configured host port to PostgreSQL container port 5432.
-- [ ] #4 Docker Compose uses starter-neutral database and volume naming.
-- [ ] #5 PostgreSQL has a pg_isready healthcheck and the documented startup command waits for readiness.
-- [ ] #6 Empty or misleading migrate, seed, and settings schema modules are removed.
-- [ ] #7 The pinned Better Auth generator reproducibly replaces the final auth schema and fails when it produces no output.
-- [ ] #8 The final auth schema contains only the core user, session, account, and verification model required by accepted authentication scope.
-- [ ] #9 The final auth schema contains no advanced-plugin tables, relations, or columns.
-- [ ] #10 One reviewed initial Drizzle migration and its metadata are committed.
-- [ ] #11 The migration succeeds against an empty PostgreSQL 17 database.
-- [ ] #12 Running the migration command a second time succeeds without pending changes.
-- [ ] #13 Format, lint, typecheck, and build gates remain green.
+- [ ] #1 Root db commands work without a separate dotenv executable, and an explicitly supplied DATABASE_URL wins over apps/server/.env.
+- [ ] #2 Docker Compose maps DB_PORT to container port 5432, uses starter-neutral names, and waits for a passing pg_isready healthcheck.
+- [ ] #3 Empty migrate, seed, and settings schema files are deleted.
+- [ ] #4 The pinned Better Auth command replaces auth-schema.ts and fails if it produces an empty or missing file.
+- [ ] #5 The generated schema contains only the user, session, account, and verification tables and their required relations.
+- [ ] #6 No admin, organization, invitation, member, two-factor, ban, role, impersonation, or active-organization fields remain.
+- [ ] #7 One reviewed initial Drizzle migration and its metadata are committed.
+- [ ] #8 pnpm db:migrate succeeds twice against a new PostgreSQL 17 database.
+- [ ] #9 pnpm format, pnpm lint, pnpm typecheck, and pnpm build pass.
 <!-- AC:END -->
 
 ## Definition of Done

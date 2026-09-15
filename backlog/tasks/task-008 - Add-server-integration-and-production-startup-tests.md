@@ -1,9 +1,10 @@
 ---
 id: TASK-008
-title: Add server integration and production startup tests
+title: Add API tests and a production startup smoke test
 status: To Do
 assignee: []
 created_date: '2026-09-15 02:32'
+updated_date: '2026-09-15 13:04'
 labels: []
 dependencies:
   - TASK-007
@@ -26,22 +27,21 @@ ordinal: 8000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-The API, auth adapter, resource cleanup, and production-only startup path currently have no automated coverage. Add a small server-focused suite that exercises Fastify without opening a normal test port and a smoke check that proves the built API runs with production dependencies, answers health requests, and terminates cleanly. This is verification infrastructure, not a hosting or container recipe.
+Add a small test suite for the API behavior we keep and a script that catches production-only startup failures. Use Node test through tsx; we do not need a separate test framework or mocks.
+
+The production check must use a production dependency tree, start the built API, call health.ping, send SIGTERM, and confirm a clean exit.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Server tests use the Node test runner through the existing TypeScript execution tooling without adding a mocking framework.
-- [ ] #2 Application construction is testable independently from network listening.
-- [ ] #3 A test verifies the public health.ping procedure succeeds with the expected response.
-- [ ] #4 A test verifies anonymous access to health.me returns an unauthorized tRPC response.
-- [ ] #5 Server tests close Fastify and all PostgreSQL resources even when an assertion fails.
-- [ ] #6 Test source is included in typechecking but excluded from the production server build.
-- [ ] #7 An automated smoke command creates or installs a production dependency tree without relying on development dependencies.
-- [ ] #8 The production smoke starts the built API with NODE_ENV=production and waits for a successful health response.
-- [ ] #9 The production smoke sends SIGTERM, observes a clean exit, and always cleans up its child process on failure.
-- [ ] #10 Production smoke output uses structured logging and contains no pino-pretty resolution failure.
-- [ ] #11 Root commands expose the server test and production smoke checks for reuse by CI.
+- [ ] #1 The Fastify app can be created for tests without opening a network port.
+- [ ] #2 A Node test checks the successful health.ping response.
+- [ ] #3 A Node test checks that health.me returns UNAUTHORIZED without a session.
+- [ ] #4 Tests always close Fastify and PostgreSQL resources.
+- [ ] #5 Server tests are typechecked but are not emitted in the production build.
+- [ ] #6 The production smoke uses the built server with production dependencies and does not rely on pino-pretty.
+- [ ] #7 The smoke waits for health.ping, sends SIGTERM, confirms exit code 0, and cleans up the child process when it fails.
+- [ ] #8 Root scripts expose the server tests and production smoke command.
 <!-- AC:END -->
 
 ## Definition of Done

@@ -1,5 +1,18 @@
 # Fullstack Starter
 
+ The completed starter provides:
+
+ - React and Vite with TanStack Router, Query, and Form;
+ - Fastify and tRPC;
+ - Drizzle and PostgreSQL 17;
+ - Better Auth email/password authentication and sessions;
+ - signup, login, logout, profile update, and password update;
+ - one public and one protected tRPC procedure;
+ - only the UI, packages, dependencies, and documentation needed by the supported scope;
+ - reproducible database initialization from a committed migration;
+ - safe development, test, and production runtime behavior;
+ - truthful local quality commands and CI verification.
+
 ## Run locally
 
 ### Prerequisites

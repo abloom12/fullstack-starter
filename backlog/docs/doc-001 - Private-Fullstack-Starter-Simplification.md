@@ -3,19 +3,19 @@ id: doc-001
 title: Private Fullstack Starter Simplification
 type: specification
 created_date: '2026-09-16 17:31'
-updated_date: '2026-09-16 17:32'
+updated_date: '2026-09-17 00:06'
 ---
 # Private Fullstack Starter Simplification
 
 ## Problem
 
-The repository contains unfinished platform features, unused frontend scaffolding, unreliable development and production behavior, and quality checks that do not fully validate the application. A fresh clone cannot yet be treated as a small, reproducible scaffold without first removing unsupported features or repairing setup, migration, and runtime behavior.
+The repository contains unfinished product features, unreliable development and production behavior, and quality checks that do not fully validate the application. It also lacks a clear distinction between unsupported product scaffolding and reusable UI inventory intentionally provided for future applications.
 
-The starter needs to describe and verify only the functionality it intentionally supports.
+A fresh clone cannot yet be treated as a small, reproducible scaffold without first removing unsupported product features and repairing setup, migration, and runtime behavior. Simplification must not remove the reusable component library or development tools that intentionally belong to the scaffold.
 
 ## Intended Outcome
 
-Produce a small, reliable, private fullstack scaffold that can be cloned, initialized, tested, and adapted without removing unfinished product features first.
+Produce a small, reliable, private fullstack scaffold that can be cloned, initialized, tested, and adapted without first removing unfinished product features or rebuilding its reusable UI inventory.
 
 The completed starter provides:
 
@@ -25,7 +25,9 @@ The completed starter provides:
 - Better Auth email/password authentication and sessions;
 - signup, login, logout, profile update, and password update;
 - one public and one protected tRPC procedure;
-- only the UI, packages, dependencies, and documentation needed by the supported scope;
+- a retained reusable UI component inventory;
+- retained development-tool overlays;
+- only product behavior, packages, dependencies, and documentation belonging to the supported scaffold;
 - reproducible database initialization from a committed migration;
 - safe development, test, and production runtime behavior;
 - truthful local quality commands and CI verification.
@@ -33,9 +35,10 @@ The completed starter provides:
 ## User Stories
 
 1. As a developer, I can clone the repository, install from the frozen lockfile, initialize a fresh local database, and start the application using documented commands.
-2. As a user, I can sign up with email and password, log in, access protected settings, update my profile and password, log out, and log back in.
-3. As an operator, I can build and start the API in production mode, receive structured logs, verify its public health procedure, and stop it cleanly with `SIGTERM`.
-4. As a maintainer, I can rely on local and CI checks to validate formatting, linting, type safety, builds, migrations, core API behavior, the browser authentication journey, production startup, and production dependency security.
+2. As a developer adapting the scaffold, I can use its existing reusable UI components without recreating components removed merely because current routes do not use them.
+3. As a user, I can sign up with email and password, log in, access protected settings, update my profile and password, log out, and log back in.
+4. As an operator, I can build and start the API in production mode, receive structured logs, verify its public health procedure, and stop it cleanly with `SIGTERM`.
+5. As a maintainer, I can rely on local and CI checks to validate formatting, linting, type safety, builds, migrations, core API behavior, the browser authentication journey, production startup, and production dependency security.
 
 ## Requirements and Invariants
 
@@ -48,8 +51,11 @@ The completed starter provides:
   - the public `health.ping` procedure;
   - the protected `health.me` procedure;
   - an `UNAUTHORIZED` result from `health.me` when no valid session is present.
-- UI retained in the repository must be reachable from the application route tree or required by a retained route.
-- No tracked source, documentation, package, or dependency may exist solely for a deferred feature.
+- Everything under `apps/web/src/components/` is intentional reusable scaffold inventory and must be retained regardless of whether current routes import it.
+- Hooks, utilities, styles, and dependencies required for the reusable component inventory to compile and operate must also be retained.
+- Existing development-tool overlays must be retained.
+- Reusable UI inventory and development tooling must not be classified as unfinished or deferred product features.
+- No tracked source, documentation, package, or dependency may exist solely for an unsupported product feature.
 
 ### Authentication simplification
 
@@ -59,10 +65,11 @@ The completed starter provides:
 - Core authentication creation must require only the database, application origin, authentication URL, and secret.
 - Email verification and password-reset workflows must not be presented as supported features.
 
-### Frontend simplification and browser contracts
+### Frontend and browser contracts
 
-- Unreachable UI components, unused hooks, unused form controls, social-auth UI, and frontend development overlays must be removed.
-- The shared form setup must retain only the input, password, and submit controls used by current routes.
+- The reusable component inventory must not be pruned based on current route reachability.
+- Existing development-tool overlays must remain available during development.
+- Authentication routes may use the subset of reusable form controls appropriate to their behavior without limiting the retained inventory.
 - Retained input and password controls must:
   - derive stable `id` and `name` attributes from the field name;
   - accept typed autocomplete values;
@@ -78,7 +85,8 @@ The completed starter provides:
 - Better Auth and its schema tooling must use the same reviewed, lockfile-pinned version.
 - Authentication schema generation must not use `pnpm dlx`, an unpinned package, or an `@latest` version.
 - Fastify, compatible Fastify plugins, Vite, Turbo, and other direct dependencies with applicable security fixes must be upgraded compatibly.
-- Duplicate adapters, unused UI packages, unused development tools, and dependencies made unnecessary by simplification must be removed rather than retained or upgraded.
+- Duplicate adapters and dependencies made unnecessary by authentication or product-feature simplification must be removed.
+- Packages required by the reusable component inventory or retained development overlays must not be removed merely because current routes do not import them directly.
 - Development-only build and test tooling must not be production dependencies.
 - Dependency changes must update the committed pnpm lockfile.
 - A frozen-lockfile installation must succeed.
@@ -101,6 +109,9 @@ The completed starter provides:
   - map the configured host database port to container port `5432`;
   - use starter-neutral resource names;
   - expose readiness through a passing `pg_isready` health check.
+- Root environment values used for Docker Compose interpolation must remain distinct from the server’s runtime `DATABASE_URL`.
+- Database credentials and URLs must be supplied as runtime configuration rather than copied into a container image.
+- Local environment files and secrets must remain excluded from Docker build contexts.
 - Empty or misleading migration, seed, settings, and schema modules must be removed.
 - One reviewed initial Drizzle migration and its metadata must be committed.
 - A new PostgreSQL 17 database must initialize successfully from the committed migration.
@@ -124,6 +135,10 @@ The completed starter provides:
 
 - Web typechecking must cover application source and Vite configuration.
 - Introducing a temporary TypeScript error in web application source must cause both web and root typecheck commands to fail.
+- Executable TypeScript configurations used by repository tooling must be included in an appropriate no-emit typecheck.
+- The Better Auth CLI configuration must be typechecked but excluded from the authentication package’s production output.
+- Playwright configuration must be typechecked once introduced.
+- TypeScript tooling configurations must not be emitted into production application or package builds unless they are themselves production runtime entry points.
 - Turbo must track the TypeScript build-information outputs actually produced by the workspaces.
 - The shared React ESLint configuration must load correctly in an ESM environment.
 - Route modules may use TanStack Router’s expected `Route` export without disabling React Refresh checks globally.
@@ -141,22 +156,32 @@ pnpm build
 ### Documentation and repository consistency
 
 - The repository must be described as a private reusable scaffold consistent with its proprietary license.
+- The reusable UI component inventory and retained development overlays must be described accurately and must not be presented as dead or unsupported code.
 - The application must have a meaningful, starter-neutral browser title.
 - Documentation must describe the verified install, environment setup, database setup, development, quality, test, migration, and production-mode commands.
+- Environment documentation must distinguish:
+  - root values used to configure the local PostgreSQL Compose service;
+  - server runtime values, including `DATABASE_URL`;
+  - browser runtime or build values.
 - Documentation must list only features and directories that exist.
 - Google OAuth, advanced authentication, finance-product, TanStack Table, nonexistent editor configuration, and nonexistent shared UI-package references must be removed.
+- Stale references to nonexistent applications must be removed from repository configuration.
 - Superseded audits, remediation plans, completed-task notes, copied vendor notes, and obsolete product-specific documentation must be removed.
 - Provider-specific hosting, reverse-proxy, and deployment guidance must not be introduced.
 
 ## Implementation Decisions
 
 - Preserve the existing monorepo architecture and the selected React, Vite, TanStack, Fastify, tRPC, Better Auth, Drizzle, and PostgreSQL technologies.
+- Treat `apps/web/src/components/` as an intentional reusable component inventory rather than deriving retention from the current route import graph.
+- Preserve the existing development-tool overlays and the packages required to operate them.
 - Better Auth schema generation uses the same pinned Better Auth version as the runtime and a dedicated configuration representing only supported email/password options.
+- Executable TypeScript tooling configurations are typechecked without becoming production build output.
 - Tests for server behavior use the Node test runner through TypeScript execution rather than introducing a separate test framework or mock-heavy architecture.
 - API behavior is tested through Fastify application construction without opening a network port.
 - Browser behavior is tested through Playwright using Chromium.
 - Production startup is tested against the built server and a production dependency installation.
 - Local PostgreSQL remains containerized for development and verification, while production images and provider-specific deployment assets remain outside the starter.
+- Environment files and secrets are runtime inputs and are not copied into container images.
 - Migrations, rather than schema push operations, are the reproducible database contract.
 
 ## Testing Decisions
@@ -219,12 +244,13 @@ pnpm test:e2e
 - Admin, organization, two-factor, OpenAPI, or breached-password Better Auth plugins.
 - Email verification and password-reset workflows.
 - Application CRUD examples such as todos.
-- UI controls and components not used by retained routes.
 - Broad frontend or backend test suites beyond the starter’s core contracts.
 - Production Docker images.
 - Hosting-provider configuration, reverse-proxy guidance, and other provider-specific deployment concerns.
 - Public package distribution, open-source release preparation, or licensing changes.
 
 ## Further Notes
+
+Reusable UI components are intentionally retained even when they do not participate in the starter’s current routes. Route reachability is therefore not a valid criterion for deleting a component or its required support dependencies.
 
 The committed initial migration establishes the reusable baseline for fresh clones. Once that baseline may protect real data, future schema changes must be additive or incremental migrations rather than edits to migration history.

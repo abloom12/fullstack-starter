@@ -1,14 +1,15 @@
 ---
 id: TASK-012
 title: Reduce authentication to email and password
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-09-17 00:34'
+updated_date: '2026-09-17 06:25'
 labels: []
 dependencies: []
 documentation:
   - doc-001
-ordinal: 12000
+ordinal: 1000
 ---
 
 ## Description

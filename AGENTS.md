@@ -1,4 +1,10 @@
 
+## Library Documentation
+
+When library behavior or APIs are relevant, consult `docs/llms/sources.md`.
+Match documentation to the installed dependency version and fetch only the
+specific linked pages needed for the task; do not load full documentation dumps.
+
 <!-- BACKLOG.MD GUIDELINES START -->
 <!-- backlog.md-instructions-version: 1.52.0 -->
 <CRITICAL_INSTRUCTION>

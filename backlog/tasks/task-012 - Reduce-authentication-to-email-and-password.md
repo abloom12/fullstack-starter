@@ -1,4 +1,4 @@
----
+ --
 id: TASK-012
 title: Reduce authentication to email and password
 status: In Progress

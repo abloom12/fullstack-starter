@@ -1,10 +1,3 @@
-
-## Library Documentation
-
-When library behavior or APIs are relevant, consult `docs/llms/sources.md`.
-Match documentation to the installed dependency version and fetch only the
-specific linked pages needed for the task; do not load full documentation dumps.
-
 <!-- BACKLOG.MD GUIDELINES START -->
 <!-- backlog.md-instructions-version: 1.52.0 -->
 <CRITICAL_INSTRUCTION>
@@ -28,3 +21,9 @@ Do not edit Backlog task, draft, document, decision, or milestone markdown files
 
 </CRITICAL_INSTRUCTION>
 <!-- BACKLOG.MD GUIDELINES END -->
+
+## Library Documentation
+
+When library behavior or APIs are relevant, consult `docs/llms/sources.md`.
+Match documentation to the installed dependency version and fetch only the
+specific linked pages needed for the task; do not load full documentation dumps.
